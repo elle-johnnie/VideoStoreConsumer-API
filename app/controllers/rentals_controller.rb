@@ -47,7 +47,7 @@ class RentalsController < ApplicationController
   end
 
   def out
-    checked_out = Rental.select(:returned == false)
+    checked_out = Rental.where(returned: false)
     rentals_out = checked_out.map do |rental|
       {
           id: rental.id,
