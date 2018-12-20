@@ -7,7 +7,9 @@ class RentalsController < ApplicationController
     rental = Rental.new(movie: @movie, customer: @customer, due_date: params[:due_date])
 
     if rental.save
+      @customer.movies_checked_out_count
       render status: :ok, json: {}
+
     else
       render status: :bad_request, json: { errors: rental.errors.messages }
     end
@@ -42,6 +44,24 @@ class RentalsController < ApplicationController
       }
     end
     render status: :ok, json: rentals
+  end
+
+  def out
+    checked_out = Rental.select(:returned == false)
+    rentals_out = checked_out.map do |rental|
+      {
+          id: rental.id,
+          title: rental.movie.title,
+          customer_id: rental.customer_id,
+          name: rental.customer.name,
+          postal_code: rental.customer.postal_code,
+          checkout_date: rental.checkout_date,
+          due_date: rental.due_date
+          # returned: rental.returned
+
+      }
+    end
+    render status: :ok, json: rentals_out
   end
 
 private
