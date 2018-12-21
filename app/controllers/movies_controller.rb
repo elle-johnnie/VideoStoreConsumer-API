@@ -28,7 +28,8 @@ def create
     render json: movie.as_json(only: [:id]), status: :ok
   else
     render json: {
-      errors: movie.errors.messages
+      errors: movie.errors.messages,
+      message: movie.errors.messages,
     }, status: :bad_request
   end
 end
